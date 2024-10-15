@@ -383,7 +383,7 @@ class BaseTrainer:
                 with autocast(self.amp):
                     batch = self.preprocess_batch(batch)
                     outputs = self.model(batch)
-                    if len(outputs == 3):
+                    if len(outputs) == 3:
                         self.loss, self.loss_items, _ = self.model(batch)
                     else:
                         self.loss, self.loss_items = self.model(batch)
