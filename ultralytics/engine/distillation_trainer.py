@@ -157,7 +157,6 @@ class BaseDistillationTrainer:
             callbacks.add_integration_callbacks(self)
 
         self.teacher_model = teacher_model
-        print(f"Teacher Model: {self.teacher_model.model.args["model"]}")
 
     def add_callback(self, event: str, callback):
         """Appends the given callback."""

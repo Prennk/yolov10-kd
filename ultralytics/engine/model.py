@@ -854,7 +854,7 @@ class Model(nn.Module):
         checks.check_pip_update_available()
 
         if teacher_model:
-            print(f"Teacher model: {teacher_model.model.args["model"]} | Task: {teacher_model.model.args["task"]}")
+            print(f"Teacher model: {teacher_model.model.args['model']} | Task: {teacher_model.model.args['task']}")
             teacher_model.info()
         else:
             raise ValueError("Please provide the teacher model.")
