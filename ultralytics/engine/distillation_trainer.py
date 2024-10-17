@@ -327,6 +327,8 @@ class BaseDistillationTrainer:
 
     def _do_distill(self, world_size=1, criterion_kd=None):
         """Train completed, evaluate and plot if specified by arguments."""
+        device = "cuda" if torch.cuda.is_available else "cpu"
+        self.teacher_model.model.to(device)
         self.teacher_model.model.eval()
         if world_size > 1:
             self._setup_ddp(world_size)
