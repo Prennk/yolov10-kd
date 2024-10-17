@@ -257,9 +257,9 @@ class v8DetectionLoss:
             )
 
         if isinstance(self.hyp, dict):
-            loss[0] *= self.hyp["box"]  # box gain
-            loss[1] *= self.hyp["cls"]  # cls gain
-            loss[2] *= self.hyp["dfl"]  # dfl gain
+            loss[0] *= self.hyp['box']  # box gain
+            loss[1] *= self.hyp['cls']  # cls gain
+            loss[2] *= self.hyp['dfl']  # dfl gain
         else:
             loss[0] *= self.hyp.box  # box gain
             loss[1] *= self.hyp.cls  # cls gain
