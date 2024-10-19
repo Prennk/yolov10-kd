@@ -390,12 +390,12 @@ class BaseDistillationTrainer:
                 # Forward
                 with autocast(self.amp):
                     batch = self.preprocess_batch(batch)
-                    self.loss, self.loss_items, logit = self.model(batch)
+                    loss_yolo, self.loss_items, logit = self.model(batch)
                     with torch.no_grad():
                         self.loss_t, self.loss_items_t, logit_t = self.teacher_model.model(batch)
                     loss_kd = criterion_kd(logit, logit_t)
                     # print(f"loss kd: {loss_kd}")
-                    self.loss = self.loss + loss_kd
+                    self.loss = loss_yolo + loss_kd
                     if RANK != -1:
                         self.loss *= world_size
                     self.tloss = (
