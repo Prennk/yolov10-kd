@@ -395,7 +395,8 @@ class BaseDistillationTrainer:
                         self.loss_t, self.loss_items_t, logit_t = self.teacher_model.model(batch)
                     loss_kd = criterion_kd(logit, logit_t)
                     # print(f"loss kd: {loss_kd}")
-                    self.loss = loss_yolo + loss_kd
+                    # self.loss = loss_yolo + loss_kd
+                    self.loss = loss_yolo
                     if RANK != -1:
                         self.loss *= world_size
                     self.tloss = (
