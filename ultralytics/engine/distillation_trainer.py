@@ -395,7 +395,6 @@ class BaseDistillationTrainer:
                         self.loss_t, self.loss_items_t, pred_scores_t, pred_distri_t = self.teacher_model.model(batch)
                     loss_kd = criterion_kd(pred_distri, pred_distri_t)
                     self.loss = loss_yolo + loss_kd
-                    assert()
                     if RANK != -1:
                         self.loss *= world_size
                     self.tloss = (
