@@ -404,7 +404,7 @@ class BaseDistillationTrainer:
                     )
 
                 # Backward
-                self.scaler.scale(self.loss).backward()
+                # self.scaler.scale(self.loss).backward()
                 self.scaler.scale(loss_kd).backward()
 
                 # Optimize - https://pytorch.org/docs/master/notes/amp_examples.html
