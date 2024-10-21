@@ -328,6 +328,7 @@ class BaseDistillationTrainer:
     def _do_distill(self, world_size=1, criterion_kd=None):
         """Train completed, evaluate and plot if specified by arguments."""
         device = self.device
+        loss_list = []
         self.teacher_model.model.to(device)
         self.teacher_model.model.eval()
         if world_size > 1:
@@ -387,7 +388,6 @@ class BaseDistillationTrainer:
                         if "momentum" in x:
                             x["momentum"] = np.interp(ni, xi, [self.args.warmup_momentum, self.args.momentum])
 
-                loss_list = []
                 # Forward
                 with autocast(self.amp):
                     batch = self.preprocess_batch(batch)
