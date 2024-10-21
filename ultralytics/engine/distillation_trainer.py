@@ -387,6 +387,7 @@ class BaseDistillationTrainer:
                         if "momentum" in x:
                             x["momentum"] = np.interp(ni, xi, [self.args.warmup_momentum, self.args.momentum])
 
+                loss_list = []
                 # Forward
                 with autocast(self.amp):
                     batch = self.preprocess_batch(batch)
@@ -394,6 +395,7 @@ class BaseDistillationTrainer:
                     with torch.no_grad():
                         self.loss_t, self.loss_items_t, pred_scores_t, pred_distri_t = self.teacher_model.model(batch)
                     loss_kd = criterion_kd(pred_distri, pred_distri_t)
+                    loss_list.append(loss_list)
                     print(f"loss_kd: {loss_kd}")
                     # self.loss = loss_yolo + loss_kd
                     self.loss = loss_yolo
