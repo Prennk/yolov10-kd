@@ -8,7 +8,7 @@ class CriterionKD(nn.Module):
     '''
     knowledge distillation loss
     '''
-    def __init__(self, temperature=4):
+    def __init__(self, temperature=5):
         super(CriterionKD, self).__init__()
         self.temperature = temperature
 

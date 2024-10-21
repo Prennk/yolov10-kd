@@ -266,7 +266,7 @@ class v8DetectionLoss:
             loss[2] *= self.hyp.dfl  # dfl gain
 
         if self.return_tensor:
-            return loss.sum() * batch_size, loss.detach(), pred_scores
+            return loss.sum() * batch_size, loss.detach(), pred_scores, pred_distri
         else:
             return loss.sum() * batch_size, loss.detach()  # loss(box, cls, dfl)
 
@@ -753,4 +753,4 @@ class E2EDetectLoss:
         one2one = preds["one2one"]
         loss_one2one = self.one2one(one2one, batch)
         
-        return loss_one2many[0] + loss_one2one[0], loss_one2many[1] + loss_one2one[1], loss_one2many[2]
+        return loss_one2many[0] + loss_one2one[0], loss_one2many[1] + loss_one2one[1], loss_one2many[2], loss_one2many[3]

@@ -327,7 +327,7 @@ class BaseDistillationTrainer:
 
     def _do_distill(self, world_size=1, criterion_kd=None):
         """Train completed, evaluate and plot if specified by arguments."""
-        device = "cuda" if torch.cuda.is_available else "cpu"
+        device = self.device
         self.teacher_model.model.to(device)
         self.teacher_model.model.eval()
         if world_size > 1:
@@ -390,13 +390,12 @@ class BaseDistillationTrainer:
                 # Forward
                 with autocast(self.amp):
                     batch = self.preprocess_batch(batch)
-                    loss_yolo, self.loss_items, logit = self.model(batch)
+                    loss_yolo, self.loss_items, pred_scores, pred_distri = self.model(batch)
                     with torch.no_grad():
-                        self.loss_t, self.loss_items_t, logit_t = self.teacher_model.model(batch)
-                    loss_kd = criterion_kd(logit, logit_t)
-                    # print(f"loss kd: {loss_kd}")
-                    # self.loss = loss_yolo + loss_kd
-                    self.loss = loss_yolo
+                        self.loss_t, self.loss_items_t, pred_scores_t, pred_distri_t = self.teacher_model.model(batch)
+                    loss_kd = criterion_kd(pred_distri, pred_distri_t)
+                    self.loss = loss_yolo + loss_kd
+                    assert()
                     if RANK != -1:
                         self.loss *= world_size
                     self.tloss = (
