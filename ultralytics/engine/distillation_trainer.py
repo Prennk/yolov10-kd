@@ -395,7 +395,8 @@ class BaseDistillationTrainer:
                     with torch.no_grad():
                         self.loss_t, self.loss_items_t, pred_scores_t, pred_distri_t = self.teacher_model.model(batch)
                     loss_kd = criterion_kd(pred_distri, pred_distri_t)
-                    loss_list.append(loss_kd)
+                    loss_kd2 = loss_kd
+                    loss_list.append(loss_kd2.item().detach())
                     print(f"loss_kd: {loss_list}")
                     # self.loss = loss_yolo + loss_kd
                     self.loss = loss_yolo
