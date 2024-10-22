@@ -393,8 +393,9 @@ class BaseDistillationTrainer:
                     self.loss_yolo, self.loss_items, pred_scores, self.pred_distri = self.model(batch)
                     with torch.no_grad():
                         self.loss_t, self.loss_items_t, pred_scores_t, self.pred_distri_t = self.teacher_model.model(batch)
-                    self.loss_kd = criterion_kd(self.pred_distri, self.pred_distri_t)
-                    self.loss = self.loss_yolo + self.loss_kd
+                    self.loss = criterion_kd(self.pred_distri, self.pred_distri_t)
+                    # self.loss = self.loss_yolo + self.loss_kd
+                    print(self.loss)
                     if RANK != -1:
                         self.loss *= world_size
                     self.tloss = (
