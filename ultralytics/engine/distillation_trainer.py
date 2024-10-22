@@ -391,15 +391,15 @@ class BaseDistillationTrainer:
                 # Forward
                 with autocast(self.amp):
                     batch = self.preprocess_batch(batch)
-                    loss_yolo, self.loss_items, pred_scores, pred_distri = self.model(batch)
+                    self.loss_yolo, self.loss_items, pred_scores, self.pred_distri = self.model(batch)
                     with torch.no_grad():
-                        self.loss_t, self.loss_items_t, pred_scores_t, pred_distri_t = self.teacher_model.model(batch)
-                    loss_kd = criterion_kd(pred_distri, pred_distri_t)
-                    loss_kd2 = loss_kd
+                        self.loss_t, self.loss_items_t, pred_scores_t, self.pred_distri_t = self.teacher_model.model(batch)
+                    self.loss_kd = criterion_kd(self.pred_distri, self.pred_distri_t)
+                    loss_kd2 = self.loss_kd
                     loss_list.append(loss_kd2.item())
                     print(f"loss_kd: {loss_list}")
                     # self.loss = loss_yolo + loss_kd
-                    self.loss = loss_yolo
+                    self.loss = self.loss_yolo
                     if RANK != -1:
                         self.loss *= world_size
                     self.tloss = (
@@ -408,7 +408,7 @@ class BaseDistillationTrainer:
 
                 # Backward
                 # self.scaler.scale(self.loss).backward()
-                self.scaler.scale(loss_kd).backward()
+                self.scaler.scale(self.loss_kd).backward()
 
                 # Optimize - https://pytorch.org/docs/master/notes/amp_examples.html
                 if ni - last_opt_step >= self.accumulate:
