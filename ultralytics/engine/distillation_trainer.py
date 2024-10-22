@@ -328,7 +328,6 @@ class BaseDistillationTrainer:
     def _do_distill(self, world_size=1, criterion_kd=None):
         """Train completed, evaluate and plot if specified by arguments."""
         device = self.device
-        loss_list = []
         self.teacher_model.model.to(device)
         self.teacher_model.model.eval()
         if world_size > 1:
@@ -395,11 +394,7 @@ class BaseDistillationTrainer:
                     with torch.no_grad():
                         self.loss_t, self.loss_items_t, pred_scores_t, self.pred_distri_t = self.teacher_model.model(batch)
                     self.loss_kd = criterion_kd(self.pred_distri, self.pred_distri_t)
-                    loss_kd2 = self.loss_kd
-                    loss_list.append(loss_kd2.item())
-                    print(f"loss_kd: {loss_list}")
-                    # self.loss = loss_yolo + loss_kd
-                    self.loss = self.loss_yolo
+                    self.loss = self.loss_yolo + self.loss_kd
                     if RANK != -1:
                         self.loss *= world_size
                     self.tloss = (
@@ -407,8 +402,7 @@ class BaseDistillationTrainer:
                     )
 
                 # Backward
-                # self.scaler.scale(self.loss).backward()
-                self.scaler.scale(self.loss_kd).backward()
+                self.scaler.scale(self.loss).backward()
 
                 # Optimize - https://pytorch.org/docs/master/notes/amp_examples.html
                 if ni - last_opt_step >= self.accumulate:
